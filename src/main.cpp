@@ -26,18 +26,20 @@ bool active = false;
 
 void turnOn(void* p) {
     if (active) return;
+
     x = 320;
     active = true;
     lastIntervalTime = millis();
     updateDisplay = true;
 }
 
-void resetTimer(void* p) {
+void turnOff(void* p) {
     if (!active) return;
 
-    x = 320;
-    lastIntervalTime = millis();
-    updateDisplay = true;
+    x = 0;
+    active = false;
+    display.clearDisplay();
+    display.display();
 }
 
 void increaseTimer(void *p) {
@@ -57,7 +59,7 @@ void setup() {
     Wire.begin();
 
     button.setPushedCallback(&turnOn);
-    button.setLongPressCallback(&resetTimer);
+    button.setLongPressCallback(&turnOff);
     button.setDoubleClickCallback(&increaseTimer);
 
     if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
